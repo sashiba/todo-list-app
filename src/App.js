@@ -7,6 +7,7 @@ import Tasks from './components/tasks'
 function App() {
   return (
     <React.Fragment>
+      <h1>ARE EI</h1>
       <Tasks />
     </React.Fragment>
   );

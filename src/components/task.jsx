@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 
 class Task extends Component {
-  state = {  }
+
   render() { 
     return (  
-      <div></div>
+      <div className="task">
+        {this.props.name}
+      </div>
     );
   }
 }
