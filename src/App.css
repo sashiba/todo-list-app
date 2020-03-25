@@ -36,3 +36,12 @@
     transform: rotate(360deg);
   }
 }
+
+.task-list {
+  height: 500px;
+  width: 50%;
+  margin: auto;
+  margin-top: 50px;
+  margin-bottom: auto;
+  background-color: rgba(0, 0, 0, 0.315);
+}
