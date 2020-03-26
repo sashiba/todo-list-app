@@ -11,8 +11,6 @@ class Task extends Component {
   }
 
   handleClick() {
-    console.log('handleCLIckTASk');
-    console.log(this.props);
     this.props.onClick(this.props.name, this.props.selected);
   }
 

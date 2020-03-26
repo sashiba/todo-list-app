@@ -41,8 +41,9 @@ class Tasks extends Component {
   }
 
   handleDelete() {
-    const newItems = this.state.items.filter( item => item.selected == true );
-    console.log(newItems);
+    const newItems = this.state.items.filter( item => item.selected == false );
+    
+    this.setState({ items: newItems });
   }
 
   render() { 
