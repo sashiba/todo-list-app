@@ -52,4 +52,15 @@
   margin: auto;
   padding: 10px;
   width: 50%;
+  background-color: white;
+  border: 2px solid;
+}
+
+.task-selected {
+  margin-top: 5px;
+  margin: auto;
+  padding: 10px;
+  width: 50%;
+  background-color: gray;
+  border: 2px solid;
 }
