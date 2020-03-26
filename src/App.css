@@ -36,3 +36,31 @@
     transform: rotate(360deg);
   }
 }
+
+.task-list {
+  height: 500px;
+  width: 50%;
+  margin: auto;
+  margin-top: 50px;
+  margin-bottom: auto;
+  background-color: rgba(0, 0, 0, 0.315);
+  border: 3px solid green;
+}
+
+.task {
+  margin-top: 5px;
+  margin: auto;
+  padding: 10px;
+  width: 50%;
+  background-color: white;
+  border: 2px solid;
+}
+
+.task-selected {
+  margin-top: 5px;
+  margin: auto;
+  padding: 10px;
+  width: 50%;
+  background-color: gray;
+  border: 2px solid;
+}
