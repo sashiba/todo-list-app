@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import Task from './task'
+import Task from './task';
+import {render} from 'react-dom';
+import {SortableContainer, SortableElement, arrayMove} from 'react-sortable-hoc';
 
 const tasks = [
   { id: 1, name: "test task #1", selected: false },
@@ -8,6 +10,32 @@ const tasks = [
   { id: 4, name: "test task #4", selected: false },
   { id: 5, name: "test task #5", selected: true }
 ]
+
+const SortableItem = SortableElement(({key, name, onClick, selected}) => (
+  <li>
+    <Task 
+      key={key} 
+      name={name} 
+      onClick={onClick} 
+      selected={selected} 
+    />
+  </li>
+));
+const SortableList = SortableContainer(({items, handlerClick}) => {
+  return (
+    <ul>
+      {items.map((item, index) => (
+        <SortableItem 
+          key={`item-${item.id}`}
+          name={item.name}
+          onClick={handlerClick}
+          selected={item.selected} 
+          index={index} 
+        />
+      ))}
+    </ul>
+  );
+});
 
 class Tasks extends Component {
   constructor(props) {
@@ -32,7 +60,9 @@ class Tasks extends Component {
       this.setState({ items: this.state.items.map( item => item.selected == true ? {...item, name } : item) });
       this.setState({ update: false });
     } else {
-      this.setState({ items: [ ...this.state.items, { "name": this.state.value, key: "should update", "selected": false }] });
+      const id = Math.max(...this.state.items.map( item => item.id)) + 1;
+    
+      this.setState({ items: [ ...this.state.items, { id: id, "name": this.state.value, "selected": false }] });
     }
     this.setState({ value: "" });
     event.preventDefault();
@@ -65,6 +95,12 @@ class Tasks extends Component {
     this.setState({ update: true });
   }
 
+  onSortEnd = ({oldIndex, newIndex}) => {
+    this.setState(({items}) => ({
+      items: arrayMove(items, oldIndex, newIndex),
+    }));
+  };
+
   render() { 
     return ( 
     <div className="task-list">
@@ -74,8 +110,8 @@ class Tasks extends Component {
         <input type="submit" value="Submit" />
       </form>
       
-      {this.state.items.map( el => <Task key={el.id} name={el.name} onClick={this.handleClick} selected={el.selected}/> )}
-      
+      <SortableList items={this.state.items} handlerClick={this.handleClick} onSortEnd={this.onSortEnd} distance={1} />;
+
       <button className="btn" onClick={this.handleUpdate}>Update task</button>
       <button className="btn" onClick={this.handleDelete}>Delete task</button>
     </div>
