@@ -14,6 +14,7 @@ class Tasks extends Component {
     super(props);
     this.state = {
       value: '',
+      update: false,
       items: tasks
     };
 
@@ -21,10 +22,18 @@ class Tasks extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.handleUpdate = this.handleUpdate.bind(this);
   }
   
   handleSubmit(event) {
-    this.setState({ items: [ ...this.state.items, { "name": this.state.value, key: "should update", "selected": false }] });
+    if (this.state.update) {
+      const name = this.state.value;
+
+      this.setState({ items: this.state.items.map( item => item.selected == true ? {...item, name } : item) });
+      this.setState({ update: false });
+    } else {
+      this.setState({ items: [ ...this.state.items, { "name": this.state.value, key: "should update", "selected": false }] });
+    }
     this.setState({ value: "" });
     event.preventDefault();
   }
@@ -46,18 +55,28 @@ class Tasks extends Component {
     this.setState({ items: newItems });
   }
 
+  handleUpdate() {
+    const selectedItems = this.state.items.filter(item => item.selected == true);
+    if (selectedItems.length != 1) {
+      alert("Please select only one task for update!")
+    }
+
+    this.input.focus();
+    this.setState({ update: true });
+  }
+
   render() { 
     return ( 
     <div className="task-list">
       
       <form onSubmit={this.handleSubmit}>
-        <input type="text" value={this.state.value} onChange={this.handleChange} />
+        <input type="text" value={this.state.value} onChange={this.handleChange} ref={ input => this.input = input } />
         <input type="submit" value="Submit" />
       </form>
       
       {this.state.items.map( el => <Task key={el.id} name={el.name} onClick={this.handleClick} selected={el.selected}/> )}
       
-      <button className="btn">Update task</button>
+      <button className="btn" onClick={this.handleUpdate}>Update task</button>
       <button className="btn" onClick={this.handleDelete}>Delete task</button>
     </div>
     );
