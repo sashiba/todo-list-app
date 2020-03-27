@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Task from './task';
-import {render} from 'react-dom';
 import {SortableContainer, SortableElement, arrayMove} from 'react-sortable-hoc';
 
 const tasks = [
@@ -11,75 +10,44 @@ const tasks = [
   { id: 5, name: "test task #5", selected: true }
 ]
 
-const SortableItem = SortableElement(({key, name, onClick, selected}) => (
-  <li>
-    <Task 
-      key={key} 
-      name={name} 
-      onClick={onClick} 
-      selected={selected} 
-    />
-  </li>
-));
-const SortableList = SortableContainer(({items, handlerClick}) => {
-  return (
-    <ul>
-      {items.map((item, index) => (
-        <SortableItem 
-          key={`item-${item.id}`}
-          name={item.name}
-          onClick={handlerClick}
-          selected={item.selected} 
-          index={index} 
-        />
-      ))}
-    </ul>
-  );
-});
-
 class Tasks extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      value: '',
-      update: false,
-      items: tasks
-    };
+  
+  state = {
+    value: '',
+    update: false,
+    items: tasks
+  };
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-    this.handleUpdate = this.handleUpdate.bind(this);
+
+  renderTask = (name) => {
+    const { selected } = this.state 
+    
+    return (
+      <input 
+        className="task"
+        onClick={this.handleClick}
+        readonly={!selected}
+        onChange={(val) => this.props.handleChange(val, this.props.id)}
+      >
+        name
+      </input>
+    );
   }
   
-  handleSubmit(event) {
-    if (this.state.update) {
-      const name = this.state.value;
-
-      this.setState({ items: this.state.items.map( item => item.selected == true ? {...item, name } : item) });
-      this.setState({ update: false });
-    } else {
-      const id = Math.max(...this.state.items.map( item => item.id)) + 1;
-    
-      this.setState({ items: [ ...this.state.items, { id: id, "name": this.state.value, "selected": false }] });
-    }
-    this.setState({ value: "" });
-    event.preventDefault();
+  handleChange = (name, id) => {
+    const item = this.state.items.find(item => item.id === id)
+    item.value = name;
+    this.setState({ items: [ ...this.state.items, item] });
+    addCampaignItem(val)
   }
 
-  handleChange(event) {
-    this.setState({value: event.target.value});
+  handleSubmit = () => {
+    const { value } = this.state
+
+    this.setState({ items: [ ...this.state.items, { id: uuid.v4(), value: this.state.value}] });
   }
 
-  handleClick(name, isSelected) {
-    const itemIndex = this.state.items.findIndex( item => item.name == name );
-    const selected = !isSelected;
-    
-    this.setState({ items: this.state.items.map( item => item.name == name ? {...item, selected } : item) });
-  }
-
-  handleDelete() {
+  handleDelete () {
     const newItems = this.state.items.filter( item => item.selected == false );
     
     this.setState({ items: newItems });
@@ -102,16 +70,21 @@ class Tasks extends Component {
   };
 
   render() { 
+    this.props.campaign_items
     return ( 
     <div className="task-list">
       
-      <form onSubmit={this.handleSubmit}>
-        <input type="text" value={this.state.value} onChange={this.handleChange} ref={ input => this.input = input } />
-        <input type="submit" value="Submit" />
-      </form>
+      <input type="text" value={this.state.value} onChange={this.handleChange} ref={ input => this.input = input } />
+      <button onClick={this.handleSubmit}>Submit</button>
       
-      <SortableList items={this.state.items} handlerClick={this.handleClick} onSortEnd={this.onSortEnd} distance={1} />;
-
+      {items.map((item, index) => (
+         SortableElement(({key, name, onClick, selected}) => (
+          <li key={key}>
+           {this.renderTask(name)}
+          </li>
+        ))
+      ))
+      }
       <button className="btn" onClick={this.handleUpdate}>Update task</button>
       <button className="btn" onClick={this.handleDelete}>Delete task</button>
     </div>

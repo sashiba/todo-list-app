@@ -1,27 +1,23 @@
 import React, { Component } from 'react';
 
 class Task extends Component {
-  // task(key, name, selected)
-  constructor(props) {
-    super(props);
-  }
+  render() {
+    const { name, id } = this.props
+    
+  handleOtherChange = (val) => {
+    this.props.handleChange(val, this.props.id)
 
-  getClass(selected) {
-    return selected ? "task-selected" : "task"
   }
-
-  handleClick() {
-    this.props.onClick(this.props.name, this.props.selected);
-  }
-
-  render() { 
     return (  
-      <div 
-        className={this.getClass(this.props.selected)}
-        onClick={this.handleClick.bind(this)}
+      <input 
+      onScroll={handleOtherChange}
+        className="task"
+        onClick={this.handleClick)}
+        readonly={!selected}
       >
+        <Iterage/>
         {this.props.name}
-      </div>
+      </input>
     );
   }
 }
